@@ -12,7 +12,8 @@ func main() {
 	database.Initdb()
 
 	//part router
-	http.Handle("/part", middleware.AuthMiddleware(http.HandlerFunc(handler.GetPartHandler)))
+	http.Handle("/part", middleware.AuthMiddleware(http.HandlerFunc(handler.PartHandler)))
+	http.Handle("/parts", middleware.AuthMiddleware(http.HandlerFunc(handler.GetPartHandlerByPartNumber)))
 
 	http.ListenAndServe(":8080", nil)
 
