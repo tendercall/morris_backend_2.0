@@ -151,7 +151,7 @@ func DeletePart(id uint) error {
 		return fmt.Errorf("part not found")
 	}
 
-	fmt.Println("Update successfull")
+	fmt.Println("Delete successfull")
 
 	return nil
 }
