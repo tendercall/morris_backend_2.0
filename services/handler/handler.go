@@ -10,6 +10,7 @@ import (
 	"morris-backend.com/main/services/models"
 )
 
+// Part GET, POST, PUT and DELETE
 func PartHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		PostPartHandler(w, r)
@@ -144,4 +145,45 @@ func DeletePartHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+// Banner GET and POST
+func BannerHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		PostBannerHandler(w, r)
+	} else if r.Method == http.MethodGet {
+		GetBannerHandler(w, r)
+	} else {
+		http.Error(w, "Invalid request method", http.StatusBadRequest)
+	}
+}
+
+func PostBannerHandler(w http.ResponseWriter, r *http.Request) {
+
+	var Banner models.Banner
+
+	if err := json.NewDecoder(r.Body).Decode(&Banner); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+
+	err := helper.PostBanner(Banner.Image, Banner.CreatedDate)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(Banner)
+}
+
+func GetBannerHandler(w http.ResponseWriter, r *http.Request) {
+
+	banner, err := helper.GetBanner()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(banner)
+
 }

@@ -1,5 +1,9 @@
 package models
 
+import (
+	"time"
+)
+
 type Part struct {
 	ID                uint   `json:"id"`
 	PartNumber        string `json:"part_number"`
@@ -10,4 +14,9 @@ type Part struct {
 	Weight            string `json:"weight"`
 	Coo               string `json:"coo"`
 	HsCode            string `json:"hs_code"`
+}
+
+type Banner struct {
+	Image       string    `json:image`
+	CreatedDate time.Time `json:"created_date"`
 }

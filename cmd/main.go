@@ -15,6 +15,9 @@ func main() {
 	http.Handle("/part", middleware.AuthMiddleware(http.HandlerFunc(handler.PartHandler)))
 	http.Handle("/parts", middleware.AuthMiddleware(http.HandlerFunc(handler.GetPartHandlerByPartNumber)))
 
+	//Bannre router
+	http.Handle("/banner", middleware.AuthMiddleware(http.HandlerFunc(handler.BannerHandler)))
+
 	http.ListenAndServe(":8080", nil)
 
 }

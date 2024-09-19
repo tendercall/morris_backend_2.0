@@ -4,12 +4,14 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 
 	"morris-backend.com/main/services/models"
 )
 
 var DB *sql.DB
 
+// Parts GET, POST, PUT and DELETE
 func PostPart(part_number, remain_part_number, part_description, fg_wison_part_number, super_ss_number, weight, coo, hs_code string) (uint, error) {
 	// Connect to the database
 	var id uint
@@ -154,4 +156,41 @@ func DeletePart(id uint) error {
 	fmt.Println("Delete successfull")
 
 	return nil
+}
+
+// Banner GET and POST
+func PostBanner(image string, created_date time.Time) error {
+	// Connect to the database
+
+	currentTime := time.Now()
+	_, err := DB.Exec("INSERT INTO banners (image, created_date) VALUES ($1, $2)", image, currentTime)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Post Successful")
+
+	return nil
+}
+
+func GetBanner() ([]models.Banner, error) {
+	rows, err := DB.Query("SELECT image, created_date FROM banners")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var Banners []models.Banner
+	for rows.Next() {
+		var Banner models.Banner
+		err := rows.Scan(&Banner.Image, &Banner.CreatedDate)
+		if err != nil {
+			return nil, err
+		}
+		Banners = append(Banners, Banner)
+	}
+
+	fmt.Println("Get Successful")
+
+	return Banners, nil
 }
