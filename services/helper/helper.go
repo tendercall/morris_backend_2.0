@@ -111,3 +111,47 @@ func GetPartByPartNumber(partNumber string) ([]models.Part, error) {
 
 	return parts, nil
 }
+
+func PutPart(id uint, part_number, remain_part_number, part_description, fg_wison_part_number, super_ss_number, weight, coo, hs_code string) error {
+	result, err := DB.Exec("UPDATE parts SET part_number=$1, remain_part_number=$2, part_description=$3, fg_wison_part_number=$4, super_ss_number=$5, weight=$6, coo=$7, hs_code=$8 WHERE id=$9", part_number, remain_part_number, part_description, fg_wison_part_number, super_ss_number, weight, coo, hs_code, id)
+
+	if err != nil {
+		return fmt.Errorf("failed to query part: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+
+	if err != nil {
+		return fmt.Errorf("failed to determine affected rows: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("part not found")
+	}
+
+	fmt.Println("Update successfull")
+
+	return nil
+}
+
+func DeletePart(id uint) error {
+	result, err := DB.Exec("DELETE FROM parts WHERE id=$1", id)
+
+	if err != nil {
+		return fmt.Errorf("failed to delete part: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+
+	if err != nil {
+		return fmt.Errorf("failed to determine affected rows: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("part not found")
+	}
+
+	fmt.Println("Update successfull")
+
+	return nil
+}
