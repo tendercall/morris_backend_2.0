@@ -109,11 +109,19 @@ func PutPartHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = helper.PutPart(part.ID, part.PartNumber, part.RemainPartNumber, part.PartDescription, part.FgWisonPartNumber, part.SuperSSNumber, part.Weight, part.Coo, part.HsCode)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		if err.Error() == "Log not found" {
+			http.Error(w, "Log not found", http.StatusNotFound)
+			return
+		} else {
+			http.Error(w, fmt.Sprintf("Failed to update log: %v", err), http.StatusInternalServerError)
+			return
+		}
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(part)
+	if err := json.NewEncoder(w).Encode(part); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func DeletePartHandler(w http.ResponseWriter, r *http.Request) {
